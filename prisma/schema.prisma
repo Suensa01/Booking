@@ -1,0 +1,82 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model MenuItem {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String
+  category    String
+  price       Float
+  image       String
+  available   Boolean     @default(true)
+  isVeg       Boolean     @default(true)
+  rating      Float?      @default(5.0)
+  prepTime    String?
+  badge       String?
+  createdAt   DateTime    @default(now())
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id              String      @id // e.g. ORD-1001
+  customerName    String
+  mobile          String
+  email           String
+  address         String
+  status          String      @default("Pending") // Pending, Accepted, Preparing, Completed, Cancelled
+  subtotal        Float
+  tax             Float
+  discount        Float       @default(0)
+  tip             Float       @default(0)
+  total           Float
+  notes           String?
+  orderType       String      @default("Delivery") // Delivery, Pickup
+  paymentMethod   String      @default("COD")      // COD, UPI, Card
+  paymentStatus   String      @default("Pending")  // Pending, Paid
+  paymentId       String?     // Payment / Transaction Reference ID (e.g. UPI Ref / Cash receipt)
+  couponCode      String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id        Int       @id @default(autoincrement())
+  orderId   String
+  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  dishId    Int?
+  menuItem  MenuItem? @relation(fields: [dishId], references: [id])
+  name      String
+  price     Float
+  quantity  Int
+  image     String?
+}
+
+model Reservation {
+  id              String   @id // e.g. RES-201
+  customerName    String
+  mobile          String
+  email           String
+  guests          Int
+  date            String
+  timeSlot        String
+  seatingArea     String
+  specialRequests String?
+  status          String   @default("Confirmed") // Confirmed, Seated, Cancelled
+  createdAt       DateTime @default(now())
+}
+
+model CustomerReview {
+  id        String   @id // e.g. REV-1
+  name      String
+  role      String
+  rating    Int
+  comment   String
+  avatar    String?
+  createdAt DateTime @default(now())
+}

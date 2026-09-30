@@ -1,0 +1,28 @@
+[
+  {
+    "id": "RES-201",
+    "customerName": "Aarav Patel",
+    "mobile": "9876543210",
+    "email": "aarav.p@example.com",
+    "guests": 4,
+    "date": "2026-09-30",
+    "timeSlot": "07:30 PM",
+    "seatingArea": "Outdoor Terrace",
+    "specialRequests": "Window corner table for anniversary dinner.",
+    "status": "Confirmed",
+    "createdAt": "2026-09-29T12:10:24.498Z"
+  },
+  {
+    "id": "RES-202",
+    "customerName": "Priya Sharma",
+    "mobile": "9822334455",
+    "email": "priya.s@example.com",
+    "guests": 2,
+    "date": "2026-10-01",
+    "timeSlot": "08:00 PM",
+    "seatingArea": "Chef's Counter",
+    "specialRequests": "Chef tasting menu experience.",
+    "status": "Confirmed",
+    "createdAt": "2026-09-29T12:10:24.498Z"
+  }
+]

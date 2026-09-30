@@ -1,0 +1,29 @@
+[
+  {
+    "id": "REV-1",
+    "name": "Savannah Nguyen",
+    "role": "Verified Foodie",
+    "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
+    "rating": 5,
+    "comment": "This place is great! Atmosphere is chill and cool but the staff is also really friendly. They know what they're doing and what they're talking about, and you can tell making the customers happy is their main priority.",
+    "createdAt": "2026-09-28T14:20:00.000Z"
+  },
+  {
+    "id": "REV-2",
+    "name": "Esther Howard",
+    "role": "Gourmet Critic",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+    "rating": 5,
+    "comment": "The wood-fired crust and smash burgers are simply sublime. Delivery arrived in under 25 minutes, steaming hot in insulated boxes. Best gourmet food delivery experience by far!",
+    "createdAt": "2026-09-27T18:10:00.000Z"
+  },
+  {
+    "id": "REV-3",
+    "name": "Marvin McKinney",
+    "role": "Regular Customer",
+    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+    "rating": 5,
+    "comment": "Incredible flavors across every dish. From the creamy Alfredo pasta to the espresso tiramisu, everything tastes like it was made fresh 5 minutes ago by master chefs.",
+    "createdAt": "2026-09-26T20:45:00.000Z"
+  }
+]

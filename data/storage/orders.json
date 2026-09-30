@@ -1,0 +1,107 @@
+[
+  {
+    "id": "ORD-1001",
+    "customerName": "Rahul Shah",
+    "mobile": "9876543210",
+    "email": "rahul.shah@example.com",
+    "address": "Apartment 4B, Skyview Towers, Park Street, New York, NY 10012",
+    "status": "Pending",
+    "subtotal": 598,
+    "tax": 29.9,
+    "total": 627.9,
+    "items": [
+      {
+        "id": 101,
+        "name": "Margherita Pizza",
+        "price": 299,
+        "quantity": 2
+      }
+    ],
+    "createdAt": "2026-09-29T10:45:00.000Z",
+    "notes": "Please deliver at the lobby reception."
+  },
+  {
+    "id": "ORD-1002",
+    "customerName": "Sarah Jenkins",
+    "mobile": "9823456789",
+    "email": "sarah.j@example.com",
+    "address": "74 Elmwood Terrace, Manhattan, NY 10014",
+    "status": "Accepted",
+    "subtotal": 548,
+    "tax": 27.4,
+    "total": 575.4,
+    "items": [
+      {
+        "id": 102,
+        "name": "Tuscan Garlic Pasta",
+        "price": 279,
+        "quantity": 1
+      },
+      {
+        "id": 104,
+        "name": "Grilled Chicken Shawarma",
+        "price": 269,
+        "quantity": 1
+      }
+    ],
+    "createdAt": "2026-09-29T10:30:00.000Z"
+  },
+  {
+    "id": "ORD-1003",
+    "customerName": "Vikram Malhotra",
+    "mobile": "9811223344",
+    "email": "vikram.m@example.com",
+    "address": "15 West End Avenue, New York, NY 10023",
+    "status": "Preparing",
+    "subtotal": 468,
+    "tax": 23.4,
+    "total": 491.4,
+    "items": [
+      {
+        "id": 108,
+        "name": "Creamy Chicken Alfredo Penne",
+        "price": 319,
+        "quantity": 1
+      },
+      {
+        "id": 103,
+        "name": "Crispy Golden French Fries",
+        "price": 149,
+        "quantity": 1
+      }
+    ],
+    "createdAt": "2026-09-29T10:15:00.000Z"
+  },
+  {
+    "id": "ORD-1004",
+    "customerName": "Elena Rodriguez",
+    "mobile": "9765432109",
+    "email": "elena.r@example.com",
+    "address": "210 Mercer Street, Soho, NY 10012",
+    "status": "Completed",
+    "subtotal": 637,
+    "tax": 31.85,
+    "total": 668.85,
+    "items": [
+      {
+        "id": 106,
+        "name": "Spicy Pepperoni & Hot Honey",
+        "price": 369,
+        "quantity": 1
+      },
+      {
+        "id": 111,
+        "name": "Iced Blood Orange Botanical Fizz",
+        "price": 129,
+        "quantity": 1
+      },
+      {
+        "id": 112,
+        "name": "Cold Brew Vietnamese Coffee",
+        "price": 139,
+        "quantity": 1
+      }
+    ],
+    "createdAt": "2026-09-29T09:40:00.000Z"
+  }
+]
