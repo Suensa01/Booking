@@ -156,7 +156,7 @@ export function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
           <p>© {currentYear} Bites. All rights reserved.</p>
           <p className="flex items-center gap-1">
-            Engineered with <Heart className="w-3.5 h-3.5 text-amber-400 fill-amber-400" /> for Tenacious Techies Technical Assessment
+            Made by Suensa with <Heart className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
           </p>
         </div>
       </div>
