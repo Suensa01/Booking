@@ -1,12 +1,11 @@
-# suensa 🍕🍔
+# suensa
 ### Restaurant Online Ordering & Order Management Application
-**Technical Assessment for Tenacious Techies Private Limited — Next.js Developer**
 
 Built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, and **Tailwind CSS**.
 
 ---
 
-## 🌟 Live Demo & Source Code
+##  Live Demo & Source Code
 - **Repository URL:** Available on GitHub
 - **Deployment Platform:** Vercel-ready (configured for zero-config deployment)
 - **Local Dev Server:** `http://localhost:3000`
@@ -48,32 +47,7 @@ Built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, and **Tail
 
 ---
 
-## 🛠️ Verification of the 20 Specific Checklist Items
 
-| # | Requirement | Implementation Details |
-|---|---|---|
-| **1** | **Remove horizontal scrolling** | Added `overflow-x: hidden` to `html, body, main` in `globals.css` and `layout.tsx`; fluid containers using `w-full max-w-7xl mx-auto px-4`. |
-| **2** | **Find broken links** | All navigation and footer links point to valid routes (`/`, `/#menu`, `/track-order`, `/admin`, `/checkout`, `/#about`). No broken `#` links. |
-| **3** | **Add a mobile menu** | Responsive animated hamburger drawer with quick navigation, order tracking, admin portal, and direct telephone call trigger. |
-| **4** | **Add a favicon** | Created custom high-resolution SVG favicon (`src/app/icon.svg` & `public/favicon.svg`) with an artisanal cloche icon. |
-| **5** | **Fix page titles** | Dynamic descriptive titles using Next.js Metadata API: `Menu`, `Checkout`, `Admin Portal`, `Order Tracking`, and `404 Not Found`. |
-| **6** | **Add meta descriptions** | SEO-compliant, descriptive meta tags across all routes with keywords and viewport parameters. |
-| **7** | **Fix footer links** | Working category anchors, story link, order tracker, admin portal, clickable phone, clickable email, and opening hours. |
-| **8** | **Add a custom 404 page** | Built `src/app/not-found.tsx` with appetizing culinary illustration, helpful message, "Return to Menu", and hotline contact. |
-| **9** | **Fix the copyright year** | Uses dynamic `new Date().getFullYear()` in `Footer.tsx` so the copyright year is always current. |
-| **10** | **Compress images** | High-performance WebP-optimized Unsplash CDN images (`auto=format&fit=crop&w=600&q=80`) with `next/image` lazy loading. |
-| **11** | **Fix broken buttons** | Every button has an explicit click handler, loading spinner state, disabled states, and keyboard accessibility. |
-| **12** | **Add success messages** | Toast notification system (`useToast()`) on adding items, quantity updates, order completion, and status changes. |
-| **13** | **Add error messages** | Inline form validation errors under every checkout input, empty cart warnings, and API error toasts. |
-| **14** | **Remove placeholder text** | Zero "Lorem ipsum" or dummy copy. Authentic culinary descriptions, real address, real hours, and chef stories. |
-| **15** | **Remove unused navigation** | Streamlined header with four purposeful destinations: Menu, Track Order, Admin Portal, and Cart. |
-| **16** | **Fix mobile overflow** | Responsive flex/grid layouts (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`), mobile drawer containment, and scroll-safe admin tables. |
-| **17** | **Make the logo clickable** | Header and footer brand logos wrap in `<Link href="/">` returning directly to the home storefront. |
-| **18** | **Make the phone number clickable** | Formatted `<a href="tel:+15557286742">` on header, hero, footer, checkout, and admin order cards. |
-| **19** | **Make the email clickable** | Formatted `<a href="mailto:mohit.work@gmail.com">` on hero, footer, and admin drawer. |
-| **20** | **Make every page mobile optimized** | Tested across 320px, 375px, 768px, 1024px, and 1440px viewports with a sticky floating mobile cart checkout bar. |
-
----
 
 ## 📁 Architecture & Folder Structure
 
@@ -242,63 +216,6 @@ SMTP_FROM='"suensa" <mohit.work@gmail.com>'
 > If SMTP credentials are not yet configured in `.env.local`, the email service automatically runs in safe simulation mode, outputting full details and simulated dispatch logs without failing order or booking creation.
 
 ---
-
-## 🎙️ Technical Review Discussion (Section 7)
-
-### Q1. Why did you choose this component and folder structure?
-> **Answer:** We followed the modern **Next.js App Router** convention with a clear separation of concerns:
-> - `src/app/`: File-system routing for pages (`/`, `/checkout`, `/admin`, `/track-order`, `not-found.tsx`) and Route Handlers (`/api/...`).
-> - `src/components/`: Reusable, single-responsibility UI components (`MenuItemCard`, `Navbar`, `CartDrawer`, `Footer`).
-> - `src/context/`: Client state management isolated in custom React Contexts (`CartContext`, `ToastContext`).
-> - `src/data/`: Static seed configuration and restaurant metadata (`restaurantData.ts`).
-> - `src/lib/`: Unified business logic, Prisma client, storage engine, authentication, and validation.
-> - `src/types/`: Central TypeScript contracts ensuring end-to-end type safety between API handlers and UI components.
-
-### Q2. Which parts are Server Components and which are Client Components? Why?
-> **Answer:**
-> - **Server Components (`app/layout.tsx`, `app/page.tsx`, `not-found.tsx`):**
->   - Used for structural shells, static metadata injection (`title`, `description`, `viewport`), SEO optimization, and serving static content (`AboutSection`).
->   - **Benefit:** Zero JavaScript sent to the client for purely static layouts, improving First Contentful Paint (FCP) and SEO rankings.
-> - **Client Components (`Navbar`, `MenuSection`, `CartDrawer`, `MenuItemCard`, `checkout/page.tsx`, `admin/page.tsx`):**
->   - Declared with `"use client"`.
->   - Required wherever browser APIs (`localStorage`), reactive hooks (`useState`, `useEffect`, `useContext`), event handlers (`onClick`, `onChange`), or animated modals/drawers are needed.
->   - **Benefit:** Hydrates only interactive islands, keeping the baseline bundle lightweight.
-
-### Q3. How would you secure the APIs in a production application?
-> **Answer:**
-> 1. **Schema Validation:** Implement runtime payload validation using **Zod** for all POST/PATCH payloads (`/api/orders`, `/api/orders/[id]`).
-> 2. **Rate Limiting:** Protect public endpoints from abuse with an in-memory or Redis-backed sliding-window rate limiter (e.g. `@upstash/ratelimit`).
-> 3. **CORS & CSRF:** Restrict CORS headers to authorized client origins; enforce CSRF tokens or SameSite strict cookies for administrative actions.
-> 4. **Authentication:** Secure administrative endpoints (`PATCH /api/orders/[id]`) using signed JWTs, NextAuth.js session tokens, or HTTP-only cookies verified in `middleware.ts`.
-
-### Q4. How would you handle authentication and authorization for the admin area?
-> **Answer:**
-> 1. **Middleware Gatekeeper (`middleware.ts`):** Intercept all routes matching `/admin/:path*` and check for an encrypted HTTP-only session cookie.
-> 2. **Authentication Provider:** Integrate **NextAuth.js (Auth.js)** or **Clerk** supporting OAuth (Google Workspace) or Email Magic Links.
-> 3. **Role-Based Access Control (RBAC):** Attach role claims (`role: 'kitchen_staff' | 'admin' | 'manager'`) to the session token.
-> 4. **Audit Logging:** Log all status change mutations with the admin's user ID and timestamp for accountability.
-
-### Q5. How would you optimize the menu page if a restaurant had 1,000+ menu items?
-> **Answer:**
-> 1. **List Virtualization:** Render only the items currently visible in the viewport using `@tanstack/react-virtual`, reducing DOM nodes from 1,000+ to ~15.
-> 2. **Server-Side Pagination & Cursor Streaming:** Fetch items in chunks (e.g., 24 per page) via `GET /api/menu?cursor=...&limit=24` using infinite scroll.
-> 3. **Debounced Server Search & Indexing:** Move search execution to the database (e.g., PostgreSQL Full-Text Search or Meilisearch) debounced by 300ms.
-> 4. **Edge Caching with On-Demand Revalidation:** Cache the menu response at the edge using Next.js `revalidateTag('menu')` and purge cache only when menu items change.
-> 5. **Image Optimization:** Use responsive `sizes`, WebP/AVIF formats, and `loading="lazy"` via Next.js `<Image />`.
-
-### Q6. How would you change the architecture if order updates needed to appear in real time?
-> **Answer:**
-> 1. **Server-Sent Events (SSE) or WebSockets:** Replace polling with a persistent bi-directional connection (e.g., Socket.io, Ably, or Pusher) between the kitchen screen and the customer tracking page.
-> 2. **Database Pub/Sub:** Utilize PostgreSQL `LISTEN/NOTIFY` (or Supabase Realtime / Redis Pub/Sub) to broadcast status changes (`order_updated` event) to subscribed clients immediately.
-> 3. **Audio Chimes:** Trigger browser Web Audio API sounds on incoming kitchen tickets to alert chefs without screen monitoring.
-
----
-
-## 🏆 Bonus Features Implemented
-- [x] **Admin Security Gate:** PIN/Passcode protection modal with default testing PIN `1234`.
-- [x] **Optimistic UI Updates:** Instant status changes in admin table with automatic rollback on network failure.
-- [x] **Printable Receipts:** Window print stylesheets for formatted order invoices.
-- [x] **Toast Feedback System:** Lightweight notifications for cart operations and order updates.
 - [x] **Live Order Tracker:** Visual step-by-step progress pipeline with search by reference code.
 - [x] **Sticky Mobile Cart Bar:** Floating bottom checkout summary on mobile screens.
 
