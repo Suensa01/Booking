@@ -1,144 +1,222 @@
 # suensa
-### Restaurant Online Ordering & Order Management Application
 
-Built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, and **Tailwind CSS**.
+> **A modern, full-stack restaurant ordering & table reservation platform with real-time order tracking, administrative management, and automated email confirmations.**
 
----
-
-##  Live Demo & Source Code
-- **Repository URL:** Available on GitHub
-- **Deployment Platform:** Vercel-ready (configured for zero-config deployment)
-- **Local Dev Server:** `http://localhost:3000`
-
----
-
-## 📋 Features Overview
-
-### A. Restaurant Menu Page (`/` or `/#menu`)
-- **Branding & Restaurant Info:** Name (*suensa*), operational hours, delivery time (25–35 mins), rating (4.9 ★ / 1,420+ reviews), physical address, and contact lines.
-- **Category Tabs:** Wood-Fired Pizza, Smash Burgers, Bronze-Cut Pasta, Sides, Italian Desserts, Botanical Beverages.
-- **Real-Time Live Search:** Debounced instant filter matching dish title and description.
-- **Dietary Filter:** Instant toggle for **Veg Only** vs. Non-Veg dishes.
-- **Dish Cards:** Compressed high-resolution food photography, chef badges, pricing, description, dietary tags, and interactive Add to Cart or `[- qty +]` quantity steppers.
-- **API Integration:** Data dynamically fetched via Next.js Route Handlers (`/api/menu`, `/api/categories`, `/api/restaurant`).
-
-### B. Shopping Cart & State Management
-- **Interactive State:** Add, update quantity, remove, and clear cart items.
-- **Calculations:** Subtotal, GST & Restaurant Tax (5%), and Grand Total formatted with currency.
-- **Persistence:** Synchronized with `localStorage` (`savoria_cart_data_v1`) with hydration safety to eliminate SSR mismatch flashes.
-- **Responsive Layout:** Slide-over drawer on desktop & tablet; floating sticky bottom cart bar on mobile screens.
-
-### C. Validated Checkout Flow (`/checkout`)
-- **Customer Form:** Full Name (min 2 chars), 10-digit Mobile Phone, Email Address (RFC format regex), and Delivery Address.
-- **Form Validation:** Real-time client-side validation with actionable error messages under each field.
-- **Order Submission:** Dispatches payload to `POST /api/orders` with loading spinner and disabled state.
-- **Order Success Confirmation:** Generates unique order reference ID (`ORD-XXXX`), displays item breakdown, ETA, delivery details, and direct link to live tracking.
-
-### D. Admin Order Management (`/admin`)
-- **Admin Dashboard:** Order statistics (Gross Revenue, Pending, Cooking in Kitchen, Completed).
-- **Status Pipeline:** Supports filtering by `All`, `Pending`, `Accepted`, `Preparing`, `Completed`, `Cancelled`.
-- **Optimistic UI Updates:** Status update calls `PATCH /api/orders/[id]` with immediate UI feedback and automatic rollback on network failure.
-- **Detailed Receipt Drawer:** Inspect customer name, address, notes, itemized breakdown, and print receipts.
-- **PIN Gatekeeper (Bonus):** Quick passcode unlock (Default PIN: `1234`).
-
-### E. Live Order Tracker (`/track-order`)
-- Visual 4-stage pipeline stepper: **Order Placed** → **Confirmed** → **In the Kitchen** → **Ready / Delivered**.
-- Customer contact and address review with direct click-to-call restaurant support.
+[![Next.js](https://img.shields.io/badge/Next.js-16.3-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.0-61DAFB?style=flat-square&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-7.10-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase)](https://supabase.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg?style=flat-square)](LICENSE)
 
 ---
 
+## 📖 About the Project
 
+**suensa** is an artisanal restaurant web application designed to deliver an intuitive, high-performance customer dining and online ordering experience. From browsing wood-fired pizzas and artisanal pasta to booking dining tables and tracking deliveries in real time, the platform combines modern design aesthetics with enterprise-grade full-stack architecture.
 
-## 📁 Architecture & Folder Structure
+### Core Tech Stack
+
+- **Frontend Framework:** [Next.js 16](https://nextjs.org/) (App Router, Server Components & Route Handlers)
+- **UI & Styling:** [React 19](https://react.dev/), [Tailwind CSS v4](https://tailwindcss.com/), and [Lucide React](https://lucide.dev/) icons
+- **Typography:** [Outfit](https://fonts.google.com/specimen/Outfit) via `next/font/google`
+- **Database & ORM:** [Supabase](https://supabase.com/) PostgreSQL managed directly through [Prisma ORM 7](https://www.prisma.io/) (`@prisma/adapter-pg`)
+- **State Management:** React Context API (`CartContext`, `ToastContext`) with safe `localStorage` hydration
+- **Authentication:** Custom cryptographic HMAC-SHA256 session token management stored in secure `HttpOnly` cookies
+- **Email Service:** [Nodemailer](https://nodemailer.com/) with SMTP support (Gmail, Brevo, Resend) and a zero-crash simulated logger fallback
+
+---
+
+## ✨ Key Features
+
+### 🍽️ Interactive Customer Storefront
+- **Dynamic Menu Discovery:** Browse dishes across curated categories (Pizza, Pasta, Burgers, Sides, Desserts, Beverages) with high-definition imagery and dietary indicators (Veg / Non-Veg).
+- **Instant Search & Dietary Filters:** Real-time debounced search by dish title and ingredients, alongside quick toggle filters for vegetarian preferences.
+- **Persistent Cart Drawer:** Slide-over shopping cart with quantity steppers, subtotal calculations, 5% GST calculation, and delivery/pickup preferences.
+- **Validated Checkout (`/checkout`):** Real-time inline field validation (RFC-compliant email, 10-digit mobile, delivery address), promo code discounts (`BITES10`), and tip additions.
+
+### 🍷 Table Reservations & Dining Booking
+- **Table Booking Modal (`/reserve`):** Select dining date, seating area (Indoor Dining, Outdoor Terrace, Chef's Counter), guest count, time slots, and special requests.
+- **Instant Reference Generation:** Confirmed reservations generate a unique `#RES-XXX` reference code and notify the customer immediately.
+
+### 📍 Live Order Tracking (`/track-order`)
+- **Real-Time Order Progress:** 4-stage visual pipeline stepper (*Order Placed* → *Confirmed* → *In the Kitchen* → *Ready / Delivered*).
+- **Direct Reference Lookup:** Search and view any active or past order by reference ID (`#ORD-XXXX`).
+
+### 🔐 Secure Admin Management Portal (`/admin`)
+- **Single Email & Password Authentication:** Protected by cryptographically signed HMAC-SHA256 `HttpOnly` session cookies.
+  - **Default Email:** `mohit.work@gmail.com`
+  - **Default Password:** `admin123`
+- **Live Order Management:** Real-time order pipeline with status updates (*Pending*, *Accepted*, *Preparing*, *Completed*, *Cancelled*) and printable customer receipts.
+- **Menu Catalog Control:** Add new culinary items, toggle live item availability, and delete dishes with instant website reflection.
+- **Table Seating Control:** Manage dining reservations, assign seating states, and update table schedules.
+- **Analytics & Export:** Key metrics overview (gross revenue, active orders, booked tables) and one-click order data export to CSV.
+
+### 📧 Automated Email Notifications
+- **Order Confirmations:** Itemized invoice, customer address, price summary, and direct "Track Your Order Live" button.
+- **Reservation Confirmations:** Booking summary, reserved date/time, table zone, guest count, and dining arrival guidelines.
+- **Zero-Crash Resilience:** Operates in safe simulation mode when SMTP credentials are not configured, printing receipts directly to server logs without failing transactions.
+
+---
+
+## 📁 Project Structure
 
 ```
-d:\Booking_assignment
+suensa/
+├── prisma/
+│   ├── schema.prisma           # Direct Supabase PostgreSQL schema definition
+│   └── seed.ts                 # Database seed script for initial dishes & reviews
 ├── public/
-│   └── favicon.svg             # Vector favicon asset
+│   ├── favicon.svg             # Application vector logo
+│   └── icon.svg                # Dynamic app icon
 ├── src/
 │   ├── app/
-│   │   ├── admin/
-│   │   │   └── page.tsx        # Admin order management dashboard
-│   │   ├── api/
-│   │   │   ├── categories/
-│   │   │   │   └── route.ts    # GET /api/categories
-│   │   │   ├── menu/
-│   │   │   │   └── route.ts    # GET /api/menu (with search & category filter)
-│   │   │   ├── orders/
-│   │   │   │   ├── [id]/
-│   │   │   │   │   └── route.ts# GET & PATCH /api/orders/[id]
-│   │   │   │   └── route.ts    # GET & POST /api/orders
-│   │   │   └── restaurant/
-│   │   │       └── route.ts    # GET /api/restaurant
-│   │   ├── checkout/
-│   │   │   └── page.tsx        # Validated checkout & order confirmation receipt
-│   │   ├── track-order/
-│   │   │   └── page.tsx        # Live order progress stepper
-│   │   ├── globals.css         # Tailwind styles & overflow-x prevention
-│   │   ├── icon.svg            # Next.js App Router dynamic favicon
-│   │   ├── layout.tsx          # Root layout with metadata and providers
-│   │   ├── not-found.tsx       # Custom culinary 404 page
+│   │   ├── admin/              # Admin dashboard with secure authentication
+│   │   ├── api/                # Next.js Server Route Handlers
+│   │   │   ├── admin/          # Admin login, logout, and session endpoints
+│   │   │   ├── categories/     # Category listing endpoint
+│   │   │   ├── coupons/        # Promo code validation handler
+│   │   │   ├── menu/           # Menu CRUD and filter handlers
+│   │   │   ├── orders/         # Order creation, lookup, and status mutation
+│   │   │   ├── reservations/   # Table booking and status handlers
+│   │   │   ├── restaurant/     # Restaurant metadata endpoint
+│   │   │   └── reviews/        # Customer testimonial endpoints
+│   │   ├── checkout/           # Multi-step checkout and invoice page
+│   │   ├── reserve/            # Dedicated table reservation page
+│   │   ├── track-order/        # Visual order tracking pipeline
+│   │   ├── globals.css         # Tailwind CSS v4 design tokens and utilities
+│   │   ├── layout.tsx          # Root layout with font optimization & metadata
+│   │   ├── not-found.tsx       # Custom 404 page
 │   │   └── page.tsx            # Main customer storefront
-│   ├── components/
-│   │   ├── AboutSection.tsx    # Brand story & culinary craftsmanship
-│   │   ├── CartDrawer.tsx      # Slide-over cart with pricing calculations
-│   │   ├── Footer.tsx          # Dynamic copyright, clickable contacts, links
-│   │   ├── MenuItemCard.tsx    # Dish card with veg badge, price, and cart controls
-│   │   ├── MenuSection.tsx     # Search, category pills, veg filter, menu grid
-│   │   ├── MobileCartBar.tsx   # Sticky floating bottom cart bar on mobile
-│   │   ├── Navbar.tsx          # Sticky navigation with mobile hamburger drawer
-│   │   ├── Providers.tsx       # Combined Cart & Toast providers
-│   │   └── RestaurantHero.tsx  # Hero section with metrics and direct contacts
-│   ├── context/
-│   │   ├── CartContext.tsx     # Shopping cart state with localStorage persistence
-│   │   └── ToastContext.tsx    # Toast notification alerts system
-│   ├── data/
-│   │   └── restaurantData.ts   # Seed menu items, restaurant info & initial sample orders
-│   ├── lib/
-│   │   ├── auth.ts             # Admin authentication & session security
-│   │   ├── db.ts               # Storage engine & database operations (Orders, Reservations, Menu)
-│   │   ├── prisma.ts           # Prisma database client singleton
-│   │   └── validators.ts       # Form validation schemas
-│   └── types/
-│       └── index.ts            # TypeScript interfaces (MenuItem, CartItem, Order, etc.)
-├── .env.example                # Environment variables template
-├── .env.local                  # Local development environment configuration
-├── next.config.ts              # Next.js configuration (Unsplash remote patterns)
-├── package.json
-└── tsconfig.json
+│   ├── components/             # Modular and reusable React components
+│   │   ├── CartDrawer.tsx      # Slide-over cart state interface
+│   │   ├── MenuItemCard.tsx    # Dish presentation card with stepper controls
+│   │   ├── MenuSection.tsx     # Menu tab navigation, search, and dish grid
+│   │   ├── Navbar.tsx          # Sticky navigation with mobile drawer
+│   │   ├── TableReservationModal.tsx # Table booking modal
+│   │   └── ...                 # Additional layout & banner sections
+│   ├── context/                # React Context state management
+│   │   ├── CartContext.tsx     # Cart items, subtotal, and tax calculation
+│   │   └── ToastContext.tsx    # Asynchronous toast notification alerts
+│   ├── data/                   # Initial fallback data & restaurant profiles
+│   ├── lib/                    # Core business logic and integrations
+│   │   ├── auth.ts             # HMAC-SHA256 session token creation and verification
+│   │   ├── db.ts               # Storage adapter (Prisma ORM with local JSON fallback)
+│   │   ├── email.ts            # Nodemailer transport and responsive HTML templates
+│   │   └── prisma.ts           # PrismaClient database singleton
+│   └── types/                  # Shared TypeScript interfaces and data contracts
+├── .env.example                # Safe environment variable template
+├── .gitignore                  # Excluded files and private environment configurations
+├── next.config.ts              # Next.js runtime & image optimization settings
+├── package.json                # Project dependencies and operational scripts
+├── postcss.config.mjs          # Tailwind CSS v4 PostCSS integration
+├── prisma.config.ts            # Prisma 7 migration and seed configuration
+└── tsconfig.json               # TypeScript compiler rules & path aliases (@/*)
 ```
 
 ---
 
-## 🚀 Setup & Running Locally
+## 🚀 Getting Started
+
+Follow these steps to set up and run the project locally on your machine.
 
 ### 1. Prerequisites
-- **Node.js:** v18.18.0 or later (tested on Node v24)
-- **npm:** v9.0.0 or later
+- **Node.js:** v18.18.0 or later (tested on Node.js v20 and v24)
+- **Package Manager:** `npm` (v9+) or `pnpm`
+- **Git**
 
 ### 2. Installation
+Clone the repository and install the project dependencies:
+
 ```bash
 # Clone the repository
-git clone <your-repository-url>
-cd Booking_assignment
+git clone https://github.com/Suensa01/Booking.git
+
+# Navigate into the project directory
+cd Booking
 
 # Install dependencies
 npm install
 ```
 
-### 3. Environment Variables
-Copy `.env.example` to `.env.local`:
+### 3. Environment Configuration
+Create a `.env.local` file by copying the provided example template:
+
 ```bash
 cp .env.example .env.local
 ```
 
-### 4. Running Development Server
+Open `.env.local` in your editor and configure your credentials:
+
+```env
+# Application Details
+NEXT_PUBLIC_APP_NAME="suensa"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+NEXT_PUBLIC_RESTAURANT_PHONE="+1 (555) 728-6742"
+NEXT_PUBLIC_RESTAURANT_EMAIL="mohit.work@gmail.com"
+
+# Admin Authentication
+ADMIN_EMAIL="mohit.work@gmail.com"
+ADMIN_PASSWORD="admin123"
+ADMIN_SESSION_SECRET="your_custom_secret_key_here"
+
+# Supabase PostgreSQL (Prisma ORM)
+DATABASE_URL="postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres"
+
+# Automated Email Notifications (Nodemailer SMTP)
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT="587"
+SMTP_USER="mohit.work@gmail.com"
+SMTP_PASS="your-16-digit-app-password"
+SMTP_FROM='"suensa" <mohit.work@gmail.com>'
+```
+
+> **Note:** If `DATABASE_URL` is omitted, the application automatically runs in zero-config development mode using persistent local storage in `data/storage/*.json`.
+
+### 4. Database Setup (Prisma & Supabase)
+Push the Prisma schema to your Supabase PostgreSQL database and seed initial restaurant dishes, customer reviews, and sample bookings:
+
+```bash
+# Push schema to Supabase PostgreSQL:
+npm run db:push
+
+# Seed initial culinary dishes and reviews:
+npm run db:seed
+```
+
+### 5. Start the Development Server
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 5. Running Production Build
+Open your browser and navigate to:
+- **Customer Storefront:** [http://localhost:3000](http://localhost:3000)
+- **Admin Management Portal:** [http://localhost:3000/admin](http://localhost:3000/admin)
+
+---
+
+## 🚢 Deployment
+
+This application is built for seamless deployment on [Vercel](https://vercel.com/):
+
+1. Push your latest code to your GitHub repository.
+2. Log in to [Vercel](https://vercel.com/) and click **Add New Project**.
+3. Select your `Booking` repository.
+4. Under **Environment Variables**, add the keys defined in your `.env.local`:
+   - `DATABASE_URL` (Supabase connection pooler URL)
+   - `DIRECT_URL` (Supabase direct database URL)
+   - `ADMIN_EMAIL`
+   - `ADMIN_PASSWORD`
+   - `ADMIN_SESSION_SECRET`
+   - `NEXT_PUBLIC_APP_NAME`
+   - `NEXT_PUBLIC_APP_URL` (Your production Vercel URL, e.g. `https://suensa.vercel.app`)
+   - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`
+5. Click **Deploy**. Vercel will automatically build the Next.js application and deploy it globally.
+
+To build and test the production bundle locally:
+
 ```bash
 npm run build
 npm start
@@ -146,75 +224,6 @@ npm start
 
 ---
 
-## 🗄️ Database Setup: Direct Supabase Connection via Prisma ORM
+## 📄 License
 
-This application connects **directly to Supabase PostgreSQL using Prisma ORM (v7)**. No separate client files or manual SQL schema installations are needed.
-
-### 1. Get your Supabase Connection String
-1. Log in to [Supabase](https://supabase.com) and create or open your project.
-2. Go to **Project Settings** → **Database** → **Connection string**.
-3. Copy the **URI** connection strings:
-   - **Transaction / Session Pooler (port 6543):** Set this as `DATABASE_URL` in `.env.local`
-   - **Direct Connection (port 5432):** Set this as `DIRECT_URL` in `.env.local`
-
-### 2. Configure `.env.local`
-```env
-# .env.local
-DATABASE_URL="postgresql://postgres.[PROJECT-REF]:[YOUR-PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true"
-DIRECT_URL="postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres"
-```
-
-### 3. Push Prisma Schema & Seed to Supabase
-Map the Prisma schema directly to Supabase PostgreSQL tables and seed initial menu items, reviews, and reservations:
-
-```bash
-# Push Prisma schema directly to Supabase PostgreSQL:
-npm run db:push
-
-# Seed initial restaurant dishes, reviews, and sample bookings:
-npm run db:seed
-```
-
-> **Zero-Config Local Development Fallback:**
-> If `DATABASE_URL` is left empty, the application automatically runs in local development mode using persistent local JSON storage in `data/storage/*.json`. No database connection is required for basic local preview!
-
----
-
-## 🔐 Admin Portal Authentication
-
-The Admin Portal at [`/admin`](http://localhost:3000/admin) is secured with **standard Email & Password authentication**:
-- **Default Email:** `mohit.work@gmail.com`
-- **Default Password:** `admin123`
-- **Configurable via:** `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env.local`.
-- **Session Management:** Cryptographically signed HMAC-SHA256 session token stored in an `HttpOnly` secure cookie (`savoria_admin_session`).
-- **Protected Actions:** Modifying order statuses, updating table reservations, and adding/deleting menu items require an active administrator session.
-
----
-
-## 📧 Automated Email Confirmations (Orders & Table Bookings)
-
-Every time a customer places an order or reserves a table, a confirmation email is dispatched to their email address:
-
-1. **Order Confirmation Email:**
-   - Sent to: `order.email`
-   - Content: Order reference ID (`#ORD-XXXX`), itemized dishes list, quantities, price breakdown (subtotal, tax, tip, discount), delivery address, and a live tracking button (`/track-order?orderId=...`).
-2. **Table Reservation Confirmation Email:**
-   - Sent to: `reservation.email`
-   - Content: Booking reference (`#RES-XXX`), date, time slot, guest count, seating area, special requests, and restaurant arrival guidelines.
-
-### SMTP Configuration in `.env.local`
-To send real emails to your customers, configure standard SMTP (Gmail App Password, Resend, Brevo, Sendgrid, Mailtrap):
-```env
-SMTP_HOST="smtp.gmail.com"
-SMTP_PORT="587"
-SMTP_USER="your-email@gmail.com"
-SMTP_PASS="your-app-password"
-SMTP_FROM='"suensa" <mohit.work@gmail.com>'
-```
-
-> **Automatic Simulation Mode:**
-> If SMTP credentials are not yet configured in `.env.local`, the email service automatically runs in safe simulation mode, outputting full details and simulated dispatch logs without failing order or booking creation.
-
----
-
-© 2026 suensa.
+This project is licensed under the **MIT License**. Feel free to use, modify, and distribute it for personal and commercial projects.
