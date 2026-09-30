@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -9,33 +9,24 @@ import {
   Search,
   Filter,
   Eye,
-  CheckCircle2,
   Clock,
   ChefHat,
   PackageCheck,
   AlertCircle,
   Phone,
   Mail,
-  MapPin,
-  Calendar,
   X,
   Lock,
-  Unlock,
+  KeyRound,
   Printer,
-  ChevronRight,
   DollarSign,
   Loader2,
   ArrowLeft,
-  Utensils,
   Download,
   Plus,
-  ToggleLeft,
-  ToggleRight,
   TrendingUp,
-  Users,
   Trash2,
   LogOut,
-  KeyRound,
   EyeOff,
 } from "lucide-react";
 import { Order, OrderStatus, Reservation, MenuItem } from "@/types";
@@ -59,7 +50,6 @@ export default function AdminOrdersPage() {
   const [filteredStatus, setFilteredStatus] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
@@ -87,9 +77,8 @@ export default function AdminOrdersPage() {
 
   const { showToast } = useToast();
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     setLoading(true);
-    setError(null);
     try {
       const [ordersRes, resRes, menuRes] = await Promise.all([
         fetch("/api/orders"),
@@ -101,17 +90,16 @@ export default function AdminOrdersPage() {
       const resData = await resRes.json();
       const menuData = await menuRes.json();
 
-      if (ordersData.success) setOrders(ordersData.data);
-      if (resData.success) setReservations(resData.data);
-      if (menuData.success) setMenuItems(menuData.data);
+      if (ordersData.success) setOrders(ordersData.data || []);
+      if (resData.success) setReservations(resData.data || []);
+      if (menuData.success) setMenuItems(menuData.data || []);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Error fetching dashboard data.";
-      setError(msg);
       showToast(msg, "error");
     } finally {
       setLoading(false);
     }
-  };
+  }, [showToast]);
 
   // Check active admin session on mount
   useEffect(() => {
@@ -143,8 +131,42 @@ export default function AdminOrdersPage() {
   // Fetch dashboard data only when authenticated
   useEffect(() => {
     if (!isAuthenticated) return;
-    fetchDashboardData();
-  }, [isAuthenticated]);
+    let ignore = false;
+
+    async function loadInitialData() {
+      try {
+        const [ordersRes, resRes, menuRes] = await Promise.all([
+          fetch("/api/orders"),
+          fetch("/api/reservations"),
+          fetch("/api/menu"),
+        ]);
+
+        const ordersData = await ordersRes.json();
+        const resData = await resRes.json();
+        const menuData = await menuRes.json();
+
+        if (!ignore) {
+          if (ordersData.success) setOrders(ordersData.data || []);
+          if (resData.success) setReservations(resData.data || []);
+          if (menuData.success) setMenuItems(menuData.data || []);
+        }
+      } catch (err: unknown) {
+        if (!ignore) {
+          const msg = err instanceof Error ? err.message : "Error fetching dashboard data.";
+          showToast(msg, "error");
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadInitialData();
+    return () => {
+      ignore = true;
+    };
+  }, [isAuthenticated, showToast]);
 
   // Update order status with Optimistic UI
   const handleStatusChange = async (orderId: string, newStatus: OrderStatus) => {

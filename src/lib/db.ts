@@ -855,7 +855,6 @@ export async function createReview(
   payload: Omit<CustomerReview, "id" | "createdAt">
 ): Promise<CustomerReview> {
   const nextId = `REV-${Date.now().toString(36)}`;
-  const createdAt = new Date().toISOString();
 
   const prisma = getPrismaClient();
   if (prisma) {
