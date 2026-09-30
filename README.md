@@ -216,8 +216,5 @@ SMTP_FROM='"suensa" <mohit.work@gmail.com>'
 > If SMTP credentials are not yet configured in `.env.local`, the email service automatically runs in safe simulation mode, outputting full details and simulated dispatch logs without failing order or booking creation.
 
 ---
-- [x] **Live Order Tracker:** Visual step-by-step progress pipeline with search by reference code.
-- [x] **Sticky Mobile Cart Bar:** Floating bottom checkout summary on mobile screens.
 
----
-© 2026 suensa. Engineered for Tenacious Techies Private Limited Technical Assessment.
+© 2026 suensa.
